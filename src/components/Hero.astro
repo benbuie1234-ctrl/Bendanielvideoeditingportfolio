@@ -1,0 +1,10 @@
+---
+const { avatar } = Astro.props;
+---
+<section class="hero">
+  <div class="avatar"><img src={avatar} alt="Ben Daniel" width="176" height="176" /></div>
+  <h1 class="hero-name">Ben <em>Daniel</em></h1>
+  <div class="hero-tags">{['Short-form', 'Long-form', 'Thumbnails', 'All platforms'].map((tag) => <span class="tag">{tag}</span>)}</div>
+  <div class="availability"><span></span><span>Taking on a few more clients</span></div>
+  <button type="button" class="cta-btn" data-open-contact>Work with me →</button>
+</section>

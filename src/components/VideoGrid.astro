@@ -1,0 +1,6 @@
+---
+import type { Video } from '../data/portfolio';
+const { videos } = Astro.props as { videos: Video[] };
+const thumbnail = (id: string) => `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
+---
+<div class="video-grid">{videos.map((video) => <button type="button" class="video-card" data-video-id={video.id} aria-label={`Play ${video.title}`}><img class="video-thumb" src={thumbnail(video.id)} alt={video.title} width="320" height="180" loading="lazy" /><span class="play-overlay"><span class="play-btn">▶</span></span></button>)}</div>

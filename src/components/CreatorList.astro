@@ -1,0 +1,5 @@
+---
+import type { Creator } from '../data/portfolio';
+const { creators } = Astro.props as { creators: Creator[] };
+---
+<div class="creators-row">{creators.map((creator) => <a href={creator.url} class="creator-chip" target="_blank" rel="noopener"><div class="creator-avatar"><img src={creator.image} alt={creator.name} width="112" height="112" loading="lazy" /></div><span class="creator-handle">{creator.handle}</span></a>)}</div>

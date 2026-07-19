@@ -1,0 +1,11 @@
+---
+import type { Reel, Testimonial } from '../data/portfolio';
+const { id, items, kind } = Astro.props as { id: string; items: Reel[] | Testimonial[]; kind: 'reels' | 'testimonials' };
+---
+<div class="carousel-wrap">
+ <button type="button" class="carousel-arrow prev" data-carousel-prev={id} aria-controls={id} aria-label="Previous items">←</button>
+ <div class="carousel-track" id={id}>
+ {items.map((item) => kind === 'reels' ? <a class="reel-thumb-card" href={(item as Reel).url} target="_blank" rel="noopener"><img src={(item as Reel).image} alt={(item as Reel).title} width="200" height="356" loading="lazy" /><span class="play-overlay"><span class="play-btn">▶</span></span><span class="reel-ig-badge">◎</span></a> : <div class="testimonial-item"><button type="button" class="testimonial-card" data-video-id={(item as Testimonial).videoId} data-link={(item as Testimonial).url} aria-label={`View testimonial from ${(item as Testimonial).creator}`}><img class="video-thumb" src={(item as Testimonial).image ?? `https://img.youtube.com/vi/${(item as Testimonial).videoId}/hqdefault.jpg`} alt={`Testimonial from ${(item as Testimonial).creator}`} width="200" height="356" loading="lazy" /><span class="play-overlay"><span class="play-btn">▶</span></span></button><a class="testimonial-caption" href={(item as Testimonial).url} target="_blank" rel="noopener">{(item as Testimonial).creator}</a></div>)}
+ </div>
+ <button type="button" class="carousel-arrow next" data-carousel-next={id} aria-controls={id} aria-label="Next items">→</button>
+</div>

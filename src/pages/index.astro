@@ -1,0 +1,128 @@
+---
+import '../styles/global.css';
+import Hero from '../components/Hero.astro';
+import CreatorList from '../components/CreatorList.astro';
+import VideoGrid from '../components/VideoGrid.astro';
+import Carousel from '../components/Carousel.astro';
+import Lightbox from '../components/Lightbox.astro';
+import ContactDialog from '../components/ContactDialog.astro';
+import { creators, featuredVideo, reels, testimonials, thumbnails, videos } from '../data/portfolio';
+
+const year = new Date().getFullYear();
+const featuredThumbnail = `https://img.youtube.com/vi/${featuredVideo.id}/hqdefault.jpg`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ben Daniel — Video Editor</title>
+    <meta name="description" content="Freelance video editor for creators. Short-form, long-form, and everything in between." />
+    <meta name="theme-color" content="#0e0e0e" />
+    <link rel="canonical" href="https://bendaniel.xyz/" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e0e0e'/%3E%3Ctext x='32' y='44' font-family='Georgia' font-size='30' font-style='italic' fill='%23d4ff5c' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E" />
+    <meta property="og:title" content="Ben Daniel — Video Editor" />
+    <meta property="og:description" content="Freelance video editor for creators. Short-form, long-form, and everything in between." />
+    <meta property="og:image" content="https://bendaniel.xyz/og-image.jpg" />
+    <meta property="og:url" content="https://bendaniel.xyz/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://bendaniel.xyz/og-image.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" />
+    <script is:inline>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,'clarity','script','xonvo6qjp2');</script>
+  </head>
+  <body>
+    <main class="page">
+      <Hero avatar="/images/ben-daniel-avatar.jpg" />
+      <h2 class="section-label">Creators I've worked with</h2>
+      <CreatorList creators={creators} />
+      <h2 class="section-label">Featured edit</h2>
+      <a class="featured-card" href={`https://www.youtube.com/watch?v=${featuredVideo.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Watch ${featuredVideo.title} on YouTube`}>
+        <img class="featured-thumb" src={featuredThumbnail} alt={featuredVideo.title} width="560" height="315" />
+        <span class="featured-overlay" aria-hidden="true"><span class="featured-play">▶</span></span>
+      </a>
+      <h2 class="section-label">What clients say</h2>
+      <Carousel id="testimonials-carousel" items={testimonials} kind="testimonials" />
+      <h2 class="section-label">YouTube edits</h2>
+      <VideoGrid videos={videos} />
+      <h2 class="section-label">Reels</h2>
+      <Carousel id="reels-carousel" items={reels} kind="reels" />
+      <h2 class="section-label">Thumbnail designs</h2>
+      <div class="thumb-grid">
+        {thumbnails.map((thumbnail) => <button type="button" class="thumb-card" data-lightbox-src={thumbnail.src} aria-label={`Open ${thumbnail.alt}`}><img src={thumbnail.src} alt={thumbnail.alt} width="320" height="180" loading="lazy" /></button>)}
+      </div>
+      <section class="contact-block">
+        <h2>Let's work <em>together</em></h2>
+        <p>Currently taking on a couple more clients.</p>
+        <button type="button" class="cta-btn" data-open-contact>Work with me →</button>
+      </section>
+      <p class="footer-note">© {year} Ben Daniel</p>
+      <p class="footer-note footer-link">Built by me. Want a website like this? I'll whip one out and get it hosted online — <button type="button" data-open-contact>get in touch.</button></p>
+    </main>
+    <Lightbox />
+    <ContactDialog />
+    <script>
+      const contact = document.querySelector('#contact-popup');
+      const lightbox = document.querySelector('#lightbox');
+      const lightboxImage = document.querySelector('#lightbox-img');
+      let lastFocusedElement: Element | null = null;
+
+      const setDialogState = (dialog: Element | null, open: boolean) => {
+        if (!dialog) return;
+        dialog.classList.toggle('is-open', open);
+        dialog.setAttribute('aria-hidden', String(!open));
+        if (open && dialog instanceof HTMLElement) dialog.focus();
+      };
+
+      const closeOpenDialog = () => {
+        const openDialog = document.querySelector('.contact-dialog.is-open, .lightbox.is-open');
+        if (!openDialog) return;
+        setDialogState(openDialog, false);
+        if (lastFocusedElement instanceof HTMLElement) lastFocusedElement.focus();
+      };
+
+      document.querySelectorAll('[data-open-contact]').forEach((button) => button.addEventListener('click', () => {
+        lastFocusedElement = document.activeElement;
+        setDialogState(contact, true);
+      }));
+      document.querySelector('[data-close-contact]')?.addEventListener('click', () => {
+        setDialogState(contact, false);
+        if (lastFocusedElement instanceof HTMLElement) lastFocusedElement.focus();
+      });
+      document.querySelectorAll('[data-lightbox-src]').forEach((button) => button.addEventListener('click', () => {
+        lastFocusedElement = document.activeElement;
+        if (lightboxImage instanceof HTMLImageElement) {
+          lightboxImage.src = button.getAttribute('data-lightbox-src') ?? '';
+          lightboxImage.alt = button.querySelector('img')?.alt ?? 'Full size preview';
+        }
+        setDialogState(lightbox, true);
+      }));
+      document.querySelector('[data-close-lightbox]')?.addEventListener('click', () => {
+        setDialogState(lightbox, false);
+        if (lastFocusedElement instanceof HTMLElement) lastFocusedElement.focus();
+      });
+      lightbox?.addEventListener('click', (event) => {
+        if (event.target === lightbox) setDialogState(lightbox, false);
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        closeOpenDialog();
+      });
+      document.querySelectorAll('[data-video-id]').forEach((card) => card.addEventListener('click', () => {
+        const id = card.getAttribute('data-video-id');
+        if (!id) {
+          const link = card.getAttribute('data-link');
+          if (link) window.open(link, '_blank', 'noopener,noreferrer');
+          return;
+        }
+        card.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0" title="YouTube video player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+      }));
+      document.querySelectorAll('[data-carousel-prev],[data-carousel-next]').forEach((button) => button.addEventListener('click', () => {
+        const id = button.getAttribute('data-carousel-prev') || button.getAttribute('data-carousel-next');
+        const track = id ? document.getElementById(id) : null;
+        track?.scrollBy({ left: button.hasAttribute('data-carousel-prev') ? -400 : 400, behavior: 'smooth' });
+      }));
+    </script>
+  </body>
+</html>

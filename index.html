@@ -155,30 +155,6 @@
     .creator-chip:active .creator-avatar { border-color: var(--accent); }
   }
 
-  /* Sticky mobile CTA — keeps "Work with me" one tap away while scrolling */
-  .sticky-cta {
-    display: none;
-    position: fixed;
-    left: 50%;
-    bottom: calc(18px + env(safe-area-inset-bottom));
-    z-index: 900;
-    padding: 13px 30px;
-    background: var(--accent);
-    color: #241206;
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 100px;
-    text-decoration: none;
-    white-space: nowrap;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(221,125,62,0.4);
-    transform: translateX(-50%) translateY(150%);
-    transition: transform 0.28s cubic-bezier(0.22,1,0.36,1);
-  }
-  .sticky-cta.show { transform: translateX(-50%) translateY(0); }
-  .sticky-cta:active { transform: translateX(-50%) scale(0.96); }
-  @media (max-width: 639px) { .sticky-cta { display: block; } }
-
   /* ─── SECTION LABEL ─── */
   .section-label {
     font-size: 10px;
@@ -879,8 +855,6 @@
     <img id="lightbox-img" src="" alt="Full size preview">
   </div>
 
-  <a href="#" class="sticky-cta" id="sticky-cta" onclick="document.getElementById('contact-popup').style.display='flex';return false;">Work with me →</a>
-
   <!-- CONTACT -->
   <div class="contact-block">
     <h2 style="font-family: var(--font-display); font-size: 1.6rem; font-weight: 400;">Let's work <em style="color: var(--accent); font-style: italic;">together</em></h2>
@@ -909,18 +883,6 @@
   </div>
 
   <script>
-    // Sticky mobile CTA: reveal after the hero scrolls out of view
-    (function() {
-      var cta = document.getElementById('sticky-cta');
-      if (!cta) return;
-      function update() {
-        if (window.scrollY > 480) cta.classList.add('show');
-        else cta.classList.remove('show');
-      }
-      window.addEventListener('scroll', update, { passive: true });
-      update();
-    })();
-
     function openLightbox(src) {
       document.getElementById('lightbox-img').src = src;
       document.getElementById('lightbox').style.display = 'flex';
